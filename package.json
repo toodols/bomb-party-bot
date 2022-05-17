@@ -1,0 +1,20 @@
+{
+  "name": "bomb-party-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "bomb-party-word-searcher": "^1.0.0",
+    "cross-fetch": "^3.1.5",
+    "socket.io-client": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.33"
+  }
+}
