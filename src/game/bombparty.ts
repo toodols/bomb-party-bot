@@ -1,9 +1,8 @@
 import EventEmitter from "events";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { Game } from "./game";
 import { Room } from "../room";
 import { Player } from "../room/player";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
 
 
 export class GamePlayer extends EventEmitter {
@@ -26,20 +25,27 @@ export class GamePlayer extends EventEmitter {
 
 export class BombParty extends Game {
 	players: Record<PlayerId, GamePlayer> = {};
-
-	submitWord(text: string) {
+	
+	submitWord(text: string, failed?: ()=>void) {
 		this.socket.emit("setWord", text, true);
+		if (failed) {
+			this.once("submitResult", (word: string, success: boolean)=>{
+				if (!success) {
+					failed();
+				}
+			})
+		}
 	}
-
+	
 	setWord(text: string) {
 		this.socket.emit("setWord", text, false);
 	}
-
+	
 	turn?: PlayerId;
 	currentPrompt?: string;
 	wordHistory: string[] = [];
 	readyPromise: Promise<void>;
-
+	
 	join() {
 		this.socket.emit("joinRound");
 	}
@@ -64,12 +70,16 @@ export class BombParty extends Game {
 			this.players[profile.peerId] = new GamePlayer((await this.room.getPlayer(profile.peerId))!);
 		})
 
-		this.socket.on("setPlayerWord", (playerid, word)=>{
+		this.socket.on("setPlayerWord", async (playerid, word)=>{
 			this.players[playerid].word = word;
 		})
 
 		this.socket.on("livesLost", (playerId, lives)=>{
 			this.players[playerId].lives = lives;
+			if (playerId === this.room.selfId) {
+				this.emit("selfLifeLost");
+				
+			}
 		})
 
 		this.socket.on("setMilestone", (milestone)=>{
@@ -87,11 +97,17 @@ export class BombParty extends Game {
 			if (playerId === this.room.selfId) {
 				const player = this.players[playerId];
 				this.emit("selfFail", player.word, reason);
+				this.emit("submitResult", player.word, false, reason)
+			} else {
+				
 			}
 		})
 
 		this.socket.on("correctWord", ({playerPeerId: playerId, bonusLetters})=>{
 			const player = this.players[playerId];
+			if (playerId === this.room.selfId) {
+				this.emit("submitResult", player.word, true)
+			}
 			player.bonusLetters = bonusLetters;
 			player.wordHistory.push(player.word);
 			this.wordHistory.push(player.word);
@@ -119,6 +135,7 @@ export interface BombParty {
 	on(event: "nextTurn", callback: ()=>void): this
 	on(event: "selfTurn", callback: (prompt: string)=>void): this
 	on(event: "gameEnded", callback: ()=>void): this
+	on(event: "submitResult", callback: (word: string, success: boolean, message?: string)=>void): this;
 	on(event: "selfFail", callback: (word: string, reason: "notInDictionary" | "mustContainSyllable" | "alreadyUsed")=>void): this
 	socket: Socket<
 		{

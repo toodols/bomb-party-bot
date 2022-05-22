@@ -1,16 +1,18 @@
 {
   "name": "bomb-party-bot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "verify-words": "node --inspect --experimental-specifier-resolution=node ./dist/verify-words.js",
+    "waluigi": "node --inspect --experimental-specifier-resolution=node ./dist/waluigi.js"
   },
   "author": "",
   "type": "module",
   "license": "ISC",
   "dependencies": {
-    "bomb-party-word-searcher": "^1.0.0",
+    "bomb-party-word-searcher": "^1.1.0",
     "cross-fetch": "^3.1.5",
     "socket.io-client": "^4.5.0"
   },
