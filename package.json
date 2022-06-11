@@ -5,18 +5,21 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "verify-words": "node --inspect --experimental-specifier-resolution=node ./dist/verify-words.js",
-    "waluigi": "node --inspect --experimental-specifier-resolution=node ./dist/waluigi.js"
+    "verify-words": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/verify-words.js",
+    "waluigi": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/waluigi.js",
+    "searcher-test": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/searcher-test.js"
   },
   "author": "",
   "type": "module",
   "license": "ISC",
   "dependencies": {
-    "bomb-party-word-searcher": "^1.1.0",
     "cross-fetch": "^3.1.5",
     "socket.io-client": "^4.5.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.33"
+    "@types/image-to-base64": "^2.1.0",
+    "@types/node": "^17.0.33",
+    "bomb-party-word-searcher": "^1.2.3",
+    "image-to-base64": "^2.2.0"
   }
 }

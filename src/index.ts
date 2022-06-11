@@ -4,7 +4,7 @@ import { fetch } from "cross-fetch";
 
 const crypto = webcrypto as unknown as Crypto;
 
-export async function joinRoom(props: { id: string; nickname?: string; userToken: string }) {
+export async function joinRoom(props: { id: string; nickname?: string; userToken: string, picture?: string }) {
 	const url: string = await fetch("https://jklm.fun/api/joinRoom", {
 		headers: { "content-type": "application/json" },
 		body: JSON.stringify({ roomCode: props.id }),
@@ -14,6 +14,7 @@ export async function joinRoom(props: { id: string; nickname?: string; userToken
 		.then((e) => e.url);
 
 	const r = new Room(url, {
+		picture: props.picture,
 		language: "en-US",
 		nickname: props.nickname || "Guest",
 		roomCode: props.id,

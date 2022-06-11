@@ -26,12 +26,12 @@ export class GamePlayer extends EventEmitter {
 export class BombParty extends Game {
 	players: Record<PlayerId, GamePlayer> = {};
 	
-	submitWord(text: string, failed?: ()=>void) {
+	submitWord(text: string, failed?: (reason: string)=>void) {
 		this.socket.emit("setWord", text, true);
 		if (failed) {
-			this.once("submitResult", (word: string, success: boolean)=>{
+			this.once("submitResult", (word: string, success: boolean, reason: string)=>{
 				if (!success) {
-					failed();
+					failed(reason);
 				}
 			})
 		}
@@ -71,7 +71,11 @@ export class BombParty extends Game {
 		})
 
 		this.socket.on("setPlayerWord", async (playerid, word)=>{
-			this.players[playerid].word = word;
+			if (this.players[playerid]) {
+				this.players[playerid].word = word;
+			} else {
+				console.log("fail")
+			}
 		})
 
 		this.socket.on("livesLost", (playerId, lives)=>{
