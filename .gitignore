@@ -3,5 +3,6 @@ data
 node_modules
 .DS_Store
 logs
-doesntwork
-idk
+add
+remove
+unknown

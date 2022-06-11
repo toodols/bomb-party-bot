@@ -7,11 +7,16 @@ import imagetobase64 from "image-to-base64"
 const searcher = new Searcher();
 let blacklist: string[] = [];
 
+const otherWords: string[] = []
+
 function findFancyWord(prompt: string, wordList: string[], blacklist: string[]){
 	let words = searcher.find(prompt);
 	// sort prompts by descending length
 	words.sort((a, b) => a.length - b.length);
 	for (const word of words) {
+		if (!wordList.includes(word) && !blacklist.includes(word)) return word;
+	}
+	for (const word of otherWords) {
 		if (!wordList.includes(word) && !blacklist.includes(word)) return word;
 	}
 }
@@ -29,7 +34,7 @@ export async function waluigi(roomid: string, token = generateToken()){
 		} else if (message === "waluigi help me pls") {
 			if (room.game instanceof BombParty && room.game.currentPrompt) {
 				const w = searcher.find(room.game.currentPrompt);
-				w.sort((a, b) => a.length - b.length);
+				w.sort((a, b) => b.length - a.length);
 				room.chat(w[Math.floor(Math.random() * w.length)]);
 			}
 		} else if (message.match(/waluigi give me a ([a-z]+)/)) {
@@ -55,6 +60,13 @@ export async function waluigi(roomid: string, token = generateToken()){
 				die = false;
 				game.join();
 			});
+			game.on("wordUsed", (player, word)=>{
+				if (searcher.find(word).length===0) {
+					otherWords.push(word);
+					console.log(otherWords)
+					appendFile("add", word+"\n", ()=>{})
+				}
+			})
 			game.join();
 			game.on("selfFail", (prompt, reason) => {
 				blacklist.push(prompt);
@@ -67,12 +79,15 @@ export async function waluigi(roomid: string, token = generateToken()){
 			game.on("selfTurn", async (prompt) => {
 				if (die) return game.submitWord("💥");
 				const word = findFancyWord(prompt, game.wordHistory, blacklist)!;
+
 				if (word) {
-				game.submitWord(word, (reason)=>{
-					if (reason === "notInDictionary") {
-						appendFile("./doesntwork", `${word}\n`, ()=>{})
-					}
-				});
+				setTimeout(()=>{
+					game.submitWord(word, (reason)=>{
+						if (reason === "notInDictionary") {
+							appendFile("./unknown", `${word}\n`, ()=>{})
+						}
+					});
+				}, 100)
 				// let i = 0;
 				// let interval = setInterval(()=>{
 				// 	i++;
@@ -82,7 +97,7 @@ export async function waluigi(roomid: string, token = generateToken()){
 				// 			console.log("FAILED: ", word)
 				// 			blacklist.push(word);
 				// 			if (reason === "notInDictionary") {
-				// 				appendFile("./doesntwork", `${word}\n`, ()=>{})
+				// 				appendFile("./unknown", `${word}\n`, ()=>{})
 				// 			}
 				// 		});
 				// 	} else {
@@ -91,8 +106,9 @@ export async function waluigi(roomid: string, token = generateToken()){
 				// }, 100)
 
 			} else {
+				console.log(prompt);
 				game.submitWord("💥");
-				appendFile("idk", prompt+"\n", ()=>{});
+				appendFile("unknown", prompt+"\n", ()=>{});
 			}
 				// let time = Date.now();
 				// let interval = setInterval(()=>{
@@ -114,11 +130,11 @@ export async function waluigi(roomid: string, token = generateToken()){
 	}
 }
 
-console.log(waluigi("CSHW", "+h9C6lhvyQ5hvOaj"))
-// console.log(waluigi("CSHW", "+h9C6lhvyQ5hvOae"))
-// console.log(waluigi("CSHW", "+h9C6lhvyQ5hvOad"))
-// console.log(waluigi("CSHW", "+h9C6lhvyQ5hvOaf"))
-// console.log(waluigi("CSHW", "+h9C6lhvyQ5hvOag"))
-// console.log(waluigi("CSHW", "+h9C6lhvyQ5hvOah"))
-// console.log(waluigi("CSHW", "+h9C6lhvyQ5hvOak"))
+console.log(waluigi("SWSA", "+h9C6lhvyQ5hvOaj"))
+// console.log(waluigi("SWSA", "+h9C6lhvyQ5hvOae"))
+// console.log(waluigi("SWSA", "+h9C6lhvyQ5hvOad"))
+// console.log(waluigi("SWSA", "+h9C6lhvyQ5hvOaf"))
+// console.log(waluigi("SWSA", "+h9C6lhvyQ5hvOag"))
+// console.log(waluigi("SWSA", "+h9C6lhvyQ5hvOah"))
+// console.log(waluigi("SWSA", "+h9C6lhvyQ5hvOak"))
 // console.log(waluigi("CSHW", "+h9C6lhvyQ5hvOee"))

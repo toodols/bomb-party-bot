@@ -41,6 +41,7 @@ export class BombParty extends Game {
 		this.socket.emit("setWord", text, false);
 	}
 	
+	rules?: Rules;
 	turn?: PlayerId;
 	currentPrompt?: string;
 	wordHistory: string[] = [];
@@ -109,13 +110,17 @@ export class BombParty extends Game {
 
 		this.socket.on("correctWord", ({playerPeerId: playerId, bonusLetters})=>{
 			const player = this.players[playerId];
-			if (playerId === this.room.selfId) {
-				this.emit("submitResult", player.word, true)
+			if (player) {
+				if (playerId === this.room.selfId) {
+					this.emit("submitResult", player.word, true)
+				}
+				player.bonusLetters = bonusLetters;
+				player.wordHistory.push(player.word);
+				this.wordHistory.push(player.word);
+				this.emit("wordUsed", player, player.word);
+			} else {
+				console.log("player not found")
 			}
-			player.bonusLetters = bonusLetters;
-			player.wordHistory.push(player.word);
-			this.wordHistory.push(player.word);
-			this.emit("wordUsed", player);
 		})
 		
 		this.socket.on("disconnect", (reason)=>{
@@ -124,6 +129,7 @@ export class BombParty extends Game {
 
 		this.readyPromise = new Promise((resolve, reject)=>{
 			this.socket.on("setup", async (data) => {
+				this.rules = data.rules
 				const players = data.players.map(e=>e.profile);
 				room.updatePlayers(players);
 				for (const p of players) {
@@ -139,6 +145,7 @@ export interface BombParty {
 	on(event: "nextTurn", callback: ()=>void): this
 	on(event: "selfTurn", callback: (prompt: string)=>void): this
 	on(event: "gameEnded", callback: ()=>void): this
+	on(event: "wordUsed", callback: (player:GamePlayer, word: string)=>void): this
 	on(event: "submitResult", callback: (word: string, success: boolean, message?: string)=>void): this;
 	on(event: "selfFail", callback: (word: string, reason: "notInDictionary" | "mustContainSyllable" | "alreadyUsed")=>void): this
 	socket: Socket<
