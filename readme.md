@@ -1,8 +1,8 @@
 # bomb-party-bot
-### A lightweight up-to-date JKLM.FUN API wrapper which can be used to develop bots for (primarily) Bomb Party and Pop Sauce.
-Included in this package are type declarations and an abstraction for each to use bot development.
+### A lightweight up-to-date JKLM.FUN API wrapper
+Included in this package are type declarations and an abstraction for each to use bot development (primarly for BombParty & PopSauce).
 
-> Disclaimer: dictionaries are not included in this package. Use [bomb-party-word-searcher](https://www.npmjs.com/package/bomb-party-word-searcher) for a list of english words.
+> **Disclaimer**: dictionaries are not included in this package. Use [bomb-party-word-searcher](https://www.npmjs.com/package/bomb-party-word-searcher) for a list of english words.
 ## Installation
 Install the package using [npm](https://www.npmjs.com/) to get started.
 
