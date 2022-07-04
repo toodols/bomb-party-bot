@@ -4,10 +4,12 @@ import { BombParty } from "../game/bombparty";
 import { Game } from "../game/game";
 import { GameSelector } from "../game/gameselector";
 import { Player } from "./player";
+import { PopSauce } from "../game/popsauce";
 
 export const games = {
 	bombparty: BombParty,
 	selector: GameSelector,
+	popsauce: PopSauce
 }
 
 interface RoomEvents {
@@ -49,7 +51,8 @@ export class Room extends EventEmitter {
 	name: string = "";
 	playerCount: number = 0;
 	
-	private playersCache: Record<PlayerId, Player> = {};
+	/** @private friend(Game) */
+	playersCache: Record<PlayerId, Player> = {};
 
 	//@ts-ignore
 	game: Game;
