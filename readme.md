@@ -22,5 +22,7 @@ export async function helloWorld(roomid: string, token = generateToken(), master
 	})
 }
 ```
-	
-# Pop Sauce api is co-authored-by: dargy <dragonismcode@users.noreply.github.com>
+## Collaborators
+| User        | Description |
+| ----------- | ----------- |
+| [dragonismcode](https://github.com/dragonismcode) | Co-authorted Pop Sauce API |
