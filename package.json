@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "verify-words": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/verify-words.js",
-    "waluigi": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/waluigi.js",
-    "searcher-test": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/searcher-test.js"
+    "verify-words": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/bots/verify-words.js",
+    "waluigi": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/bots/waluigi.js",
+    "searcher-test": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/bots/searcher-test.js",
+    "popbot": "tsc && node --inspect --experimental-specifier-resolution=node ./dist/bots/popbot.js"
   },
   "author": "",
   "type": "module",

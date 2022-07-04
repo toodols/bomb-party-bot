@@ -1,7 +1,7 @@
 import Searcher from "bomb-party-word-searcher";
 import { appendFile, appendFileSync, mkdirSync } from "fs";
-import { generateToken, joinRoom } from ".";
-import { BombParty } from "./game/bombparty";
+import { generateToken, joinRoom } from "..";
+import { BombParty } from "../game/bombparty";
 import imagetobase64 from "image-to-base64";
 
 const searcher = new Searcher();

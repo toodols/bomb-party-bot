@@ -1,6 +1,6 @@
 import Searcher from "bomb-party-word-searcher";
-import { generateToken, joinRoom } from ".";
-import { BombParty } from "./game/bombparty";
+import { generateToken, joinRoom } from "..";
+import { BombParty } from "../game/bombparty";
 
 const words = `
 aww
