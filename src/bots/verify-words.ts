@@ -27,7 +27,7 @@ const fails: string[] = [];
 
 async function bot(){
 	const room = await joinRoom({id: "SZTH", userToken: generateToken()})
-	const game = room.game as BombParty;
+	const game = room.game as BombParty.BombParty;
 	game.join();
 	game.on("submitResult", (word, success)=>{
 		if (words.includes(word)){

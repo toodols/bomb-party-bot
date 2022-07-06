@@ -1,17 +1,23 @@
-interface Auth {
+export interface PrivateAuth {
 	service: "discord",
 	token: string,
 	expiration: number,
 	username: string,
 }
 
-type Role = "leader"
+export interface PublicAuth {
+	service: "discord",
+	id: string,
+	username: string,
+}
 
-interface Profile {peerId: number, nickname: string, language: Language, roles: Role[], auth: Auth | null}
+export type Role = "leader"
 
-interface ProfileWithOnline {
+export interface Profile {peerId: number, nickname: string, language: Language, roles: Role[], auth: PublicAuth | null}
+
+export interface ProfileWithOnline {
 	profile: Profile,
 	online: boolean,
 }
 
-type PlayerId = number;
+export type PlayerId = number;

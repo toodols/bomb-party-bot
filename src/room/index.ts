@@ -5,11 +5,14 @@ import { Game } from "../game/game";
 import { GameSelector } from "../game/gameselector";
 import { Player } from "./player";
 import { PopSauce } from "../game/popsauce";
+import { PlayerId, Profile, PrivateAuth } from "./types";
+
+export * from "./player";
 
 export const games = {
-	bombparty: BombParty,
+	bombparty: BombParty.BombParty,
 	selector: GameSelector,
-	popsauce: PopSauce
+	popsauce: PopSauce.PopSauce,
 }
 
 interface RoomEvents {
@@ -31,7 +34,7 @@ interface EmitEvents {
 		roomCode: string,
 		userToken: string,
 		picture?: string,
-		auth?: Auth
+		auth?: PrivateAuth
 	}, callback: (data: {
 		roomEntry: {
 			roomCode: string,
@@ -97,7 +100,7 @@ export class Room extends EventEmitter {
 		this.code = props.roomCode;
 		this.userToken = props.userToken;
 
-		this.socket = io(url, {reconnection: false, transports: ["websocket"]});
+		this.socket = io(url, {reconnection: true, transports: ["websocket"]});
 
 		this.socket.on("playerCountChanged", ({count})=>{
 			this.emit("playerCountChanged", count);
@@ -105,7 +108,7 @@ export class Room extends EventEmitter {
 		})
 
 		this.socket.on("disconnect", (reason)=>{
-			console.log("disconnected for", reason);
+			console.log("Disconnected from room.", reason);
 		})
 
 		this.socket.on("chat", async (profile: Profile, message: string)=>{

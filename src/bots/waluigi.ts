@@ -51,14 +51,14 @@ export async function waluigi(roomid: string, token = generateToken(), master=fa
 		if (message === "waluigi") {
 			room.chat("wah!!~");
 		} else if (message === "waluigi help me pls") {
-			if (room.game instanceof BombParty && room.game.currentPrompt) {
+			if (room.game instanceof BombParty.BombParty && room.game.currentPrompt) {
 				const w = searcher.find(room.game.currentPrompt);
 				w.sort((a, b) => b.length - a.length);
 				room.chat(w[Math.floor(Math.random() * w.length)]);
 			}
 		} else if (message.match(/waluigi give me a ([a-z]+)/)) {
 			let v = message.match(/waluigi give me a ([a-z]+)/);
-			if (v && room.game instanceof BombParty && room.game.currentPrompt) {
+			if (v && room.game instanceof BombParty.BombParty && room.game.currentPrompt) {
 				let a = v;
 				const w = searcher.find(room.game.currentPrompt).filter((e) => e.match(a[1]));
 				room.chat(w[Math.floor(Math.random() * w.length)]);
@@ -104,7 +104,7 @@ export async function waluigi(roomid: string, token = generateToken(), master=fa
 	subBombParty();
 
 	function subBombParty() {
-		if (room.game instanceof BombParty) {
+		if (room.game instanceof BombParty.BombParty) {
 			const game = room.game;
 			game.on("gameEnded", () => {
 				die = false;
@@ -116,6 +116,7 @@ export async function waluigi(roomid: string, token = generateToken(), master=fa
 			});
 			game.on("wordUsed", (player, word, raw) => {
 				if (master) {
+					appendFile("words", game.currentPrompt +" - "+ word+"\n", ()=>{});
 					if (!scores[player.player.id]) {
 						scores[player.player.id] = []
 					}
@@ -169,7 +170,9 @@ export async function waluigi(roomid: string, token = generateToken(), master=fa
 					word = findFancyWord(prompt, blacklist);
 				}
 				if (word) {
-					game.submitWord(word);
+					setTimeout(()=>{
+						game.submitWord(word!);
+					}, 100);
 					// setTimeout(() => {
 					// 	// game.submitWord(word!, (reason) => {
 					// 	// 	if (reason === "notInDictionary") {
@@ -209,7 +212,7 @@ export async function waluigi(roomid: string, token = generateToken(), master=fa
 	};
 }
 
-console.log(waluigi("UJKT", "+h9C6lhvyQ5hvOaj", true));
+console.log(waluigi("XAXM", "+h9C6lhvyQ5hvOaj", true));
 // console.log(waluigi("AHPE", "+h9C6lhvyQ5hvOae"))
 // console.log(waluigi("AHPE", "+h9C6lhvyQ5hvOad"))
 // console.log(waluigi("QJUC", "+h9C6lhvyQ5hvOaf"))

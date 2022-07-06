@@ -1,10 +1,17 @@
 import { games, Room } from "./room";
 import { webcrypto } from "crypto";
 import { fetch } from "cross-fetch";
+import { BombParty } from "./game/bombparty";
+import { PrivateAuth } from "./room/types";
 
 const crypto = webcrypto as unknown as Crypto;
 
-export async function joinRoom(props: { id: string; nickname?: string; userToken: string, picture?: string }, url?: string) {
+export * from "./room";
+export * from "./game/bombparty"
+export * from "./game/gameselector"
+export * from "./game/popsauce";
+
+export async function joinRoom(props: { id: string; nickname?: string; userToken: string, picture?: string, auth?: PrivateAuth }, url?: string) {
 	if (!url) {
 		url = await fetch("https://jklm.fun/api/joinRoom", {
 			headers: { "content-type": "application/json" },
@@ -21,6 +28,7 @@ export async function joinRoom(props: { id: string; nickname?: string; userToken
 		nickname: props.nickname || "Guest",
 		roomCode: props.id,
 		userToken: props.userToken,
+		auth: props.auth,
 	});
 	await r.readyPromise;
 	return r;

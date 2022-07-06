@@ -27,12 +27,12 @@ async function popbot(id: string, userToken: string = generateToken(), master=fa
 	let answer = "";
 	room.on("chat", (player, message)=>{
 		if (message === "answer") {
-			if (room.game instanceof PopSauce) {
+			if (room.game instanceof PopSauce.PopSauce) {
 				room.chat(`Guess: ${answer}`)
 			}
 		}
 	})
-	if (room.game instanceof PopSauce) {
+	if (room.game instanceof PopSauce.PopSauce) {
 		let game = room.game;
 		await game.readyPromise;
 		if (master) {

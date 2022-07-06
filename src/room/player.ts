@@ -1,11 +1,12 @@
 import EventEmitter from "events";
+import { Profile, PublicAuth, Role } from "./types";
 
 export class Player extends EventEmitter {
 	id: number;
 	nickname: string;
 	language: Language;
 	roles: Role[];
-	auth?: Auth;
+	auth?: PublicAuth;
 
 	syncProfile(profile: Profile){
 		this.nickname = profile.nickname;

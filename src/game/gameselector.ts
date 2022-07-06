@@ -1,5 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Room } from "../room";
+import { PlayerId } from "../room/types";
 import { Game } from "./game";
 
 export class GameSelector extends Game {
