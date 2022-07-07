@@ -103,7 +103,7 @@ async function createBotRooms(){
 		popbot(res.roomCode, generateToken());
 	}	
 	let token = generateToken();
-	popbot("QVZG", token);
+	popbot("PFCW", token);
 }
 
 createBotRooms();

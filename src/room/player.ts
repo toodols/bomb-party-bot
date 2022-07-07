@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import { Profile, PublicAuth, Role } from "./types";
+import { Language, Profile, PublicAuth, Role } from "./types";
 
 export class Player extends EventEmitter {
 	id: number;

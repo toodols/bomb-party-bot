@@ -21,3 +21,5 @@ export interface ProfileWithOnline {
 }
 
 export type PlayerId = number;
+
+export type Language = "en-US"

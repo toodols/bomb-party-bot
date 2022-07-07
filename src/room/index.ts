@@ -5,7 +5,7 @@ import { Game } from "../game/game";
 import { GameSelector } from "../game/gameselector";
 import { Player } from "./player";
 import { PopSauce } from "../game/popsauce";
-import { PlayerId, Profile, PrivateAuth } from "./types";
+import { PlayerId, Profile, PrivateAuth, Language } from "./types";
 
 export * from "./player";
 
