@@ -69,7 +69,11 @@ export class Room extends EventEmitter {
 
 	updatePlayers(profiles: Profile[]){
 		for (const profile of profiles) {
-			this.playersCache[profile.peerId] = new Player(profile);
+			if (this.playersCache[profile.peerId]) {
+				this.playersCache[profile.peerId].syncProfile(profile);
+			} else {
+				this.playersCache[profile.peerId] = new Player(profile);
+			}
 		}
 	}
 
@@ -104,8 +108,37 @@ export class Room extends EventEmitter {
 
 		this.socket.on("playerCountChanged", ({count})=>{
 			this.emit("playerCountChanged", count);
+
+			if (count > this.playerCount) {
+				this.socket.emit("getChatterProfiles", (profiles)=>{
+					const added = profiles.find(profile => !this.playersCache[profile.peerId]);
+					this.updatePlayers(profiles);
+					if (added) {
+						this.emit("playerAdded", this.playersCache[added.peerId]);
+					}
+				})
+			} else if (count < this.playerCount) {
+				this.socket.emit("getChatterProfiles", (profiles)=>{
+					const removed = Object.values(this.playersCache).find(player => !profiles.find(profile => profile.peerId === player.id));
+					this.updatePlayers(profiles);
+					if (removed) {
+						this.emit("playerRemoved", this.playersCache[removed.id]);
+					}
+				})
+			}
+
 			this.playerCount = count;
 		})
+
+		// ITS GETTING CROWDED IN HERE
+		// // nickname is completely useless besides chat messages
+		// this.socket.on("chatterAdded", (user)=>{
+
+		// })
+		
+		// this.socket.on("chatterRemoved", (user)=>{
+
+		// })
 
 		this.socket.on("disconnect", (reason)=>{
 			console.log("Disconnected from room.", reason);
@@ -133,5 +166,7 @@ export class Room extends EventEmitter {
 
 export interface Room {
 	on(event: "ready", callback: ()=>void): this;
+	on(event: "playerAdded", callback: (player: Player)=>void): this;
+	on(event: "playerRemoved", callback: (player: Player)=>void): this;
 	on(event: "chat", callback: (author: Player, message: string)=>void): this
 }

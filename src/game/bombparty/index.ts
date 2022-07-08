@@ -99,6 +99,12 @@ export namespace BombParty {
 			});
 
 			this.socket.on("failWord", (playerId, reason) => {
+				const player = this.players[playerId];
+				if (player) {
+					this.emit("failWord", player, player.word, reason);
+					player.word = "";
+				}
+
 				if (playerId === this.room.selfId) {
 					const player = this.players[playerId];
 					this.emit("selfFail", player.word, reason);
@@ -150,6 +156,7 @@ export namespace BombParty {
 	}
 
 	export interface BombParty {
+		on(event: "failWord", callback: (player: GamePlayer, word: string, reason: "notInDictionary" | "mustContainSyllable" | "alreadyUsed")=>void): this;
 		on(event: "nextTurn", callback: () => void): this;
 		on(event: "selfTurn", callback: (prompt: string) => void): this;
 		on(event: "gameEnded", callback: () => void): this;
